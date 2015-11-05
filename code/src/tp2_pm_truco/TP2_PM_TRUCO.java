@@ -17,7 +17,7 @@ public class TP2_PM_TRUCO {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Game g = new Game();
+        Game g = Game.getGame();
         g.playNow();
     }
     

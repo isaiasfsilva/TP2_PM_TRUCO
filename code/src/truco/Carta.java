@@ -23,7 +23,7 @@ public final class Carta {
         this.nome=nome;
     }
 
-    public String getNome(String nome){
+    public String getNome(){
         return this.nome;
     }    
 

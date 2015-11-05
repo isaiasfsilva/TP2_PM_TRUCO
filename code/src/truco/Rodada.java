@@ -13,36 +13,33 @@ import java.util.Map.Entry;
  * @author isaiasfaria
  */
 public final class Rodada {
-    private int pontos_em_disputa;
     private Map<Jogador,Carta> cartas_na_mesa = new HashMap<Jogador,Carta>();
-    private boolean empate;
+    private boolean empate, truco;
+    private Jogador vencedorTruco;
     public Rodada(){
-        this.setPontos(2);
         this.empate=false;
+        this.truco=false;
     }
     
-    private void setPontos(int ptos){
-        this.pontos_em_disputa=ptos;
-    }
-    
-    public void addPontos(int ptos){
-        this.pontos_em_disputa+=ptos;
-    }
-    
-    public int getPontos(){
-        return this.pontos_em_disputa;
-    }
-    
+
     public void addCarta(Carta carta, Jogador jogador){
-        this.cartas_na_mesa.put(jogador, carta);
+        if(carta!=null)
+            this.cartas_na_mesa.put(jogador, carta);
+    }
+    
+    public boolean isTruco(){
+        return this.truco;
     }
 //Retorna qual jogador que mandou a maior carta.
 //Se der empate ele retorna o último (o que cangou)
-    public Jogador getVencedor(){  
+    public Jogador getVencedor(){
+        if(this.isTruco()){
+            return this.vencedorTruco;
+        }
         Jogador maior=null;
         for(Entry<Jogador,Carta> c : this.cartas_na_mesa.entrySet()){
             if(maior==null || this.cartas_na_mesa.get(maior).getPeso()<= c.getValue().getPeso()){
-                if(this.cartas_na_mesa.get(maior).getPeso()== c.getValue().getPeso())
+                if(maior!=null && this.cartas_na_mesa.get(maior).getPeso()== c.getValue().getPeso())
                     this.empate=true;
                 else
                     this.empate=false;
@@ -53,7 +50,22 @@ public final class Rodada {
         return maior;
     }
     
-      public boolean isEmpate(){        
+    public Jogador getJogadorVencedorTemp(){
+        return this.getVencedor();
+    }  
+    
+    public Carta getMaiorCartaAtual(){
+        Carta maior=null;
+        for(Entry<Jogador,Carta> c : this.cartas_na_mesa.entrySet()){
+            if(maior==null || maior.getPeso()<= c.getValue().getPeso()){
+                maior=c.getValue();
+            }
+                
+        }
+                
+        return maior;
+    }
+    public boolean isEmpate(){        
         return this.empate;
     }
 }

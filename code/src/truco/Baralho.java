@@ -1,25 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class use Singleton.
  */
 package truco;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- *
- * @author isaiasfaria
- */
 public final class Baralho {
-    public ArrayList<Carta> cartas = new ArrayList<Carta>();
+    public ArrayList<Carta> cartas = new ArrayList<Carta>();    
+    private static Baralho baralho;
     
-    public Baralho(){
+    private Baralho(){
         this.loadCartas();
     }
-
+    public static Baralho getBaralho(){
+        if(baralho==null)
+            baralho=new Baralho();
+        
+        return baralho;
+    }
     private void loadCartas() {
+        
     //Paus     
         this.cartas.add(new Carta("5 de Paus",2));
         this.cartas.add(new Carta("6 de Paus",3));
@@ -31,8 +32,8 @@ public final class Baralho {
         this.cartas.add(new Carta("2 de Paus",9));
         this.cartas.add(new Carta("3 de Paus",10));        
         this.cartas.add(new Carta("Zap",14));
-    //Copas
-       
+        
+    //Copas       
         this.cartas.add(new Carta("4 de Copas",1));
         this.cartas.add(new Carta("5 de Copas",2));
         this.cartas.add(new Carta("6 de Copas",3));
@@ -44,8 +45,7 @@ public final class Baralho {
         this.cartas.add(new Carta("3 de Copas",10));        
         this.cartas.add(new Carta("7 Copas",13));
         
-    //Ouros
-        
+    //Ouros        
         this.cartas.add(new Carta("4 de Ouros",1));
         this.cartas.add(new Carta("5 de Ouros",2));
         this.cartas.add(new Carta("6 de Ouros",3));
@@ -57,8 +57,7 @@ public final class Baralho {
         this.cartas.add(new Carta("3 de Ouros",10));        
         this.cartas.add(new Carta("7 Ouros",11));
         
-    //Espadas
-        
+    //Espadas        
         this.cartas.add(new Carta("4 de Espadas",1));
         this.cartas.add(new Carta("5 de Espadas",2));
         this.cartas.add(new Carta("6 de Espadas",3));
@@ -76,7 +75,6 @@ public final class Baralho {
     }
     
     public final Carta getCarta(int i){
-
         return this.cartas.get(i);
     }
     

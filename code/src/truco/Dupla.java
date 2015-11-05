@@ -13,6 +13,7 @@ public final class Dupla {
 
     private Jogador jogadorA, jogadorB;
     private int pontos;
+    private String nome;
     public Dupla(Jogador A, Jogador B){
        this.setJogadorA(A);
        this.setJogadorB(B);
@@ -25,11 +26,22 @@ public final class Dupla {
         this.zeraPontos();
     }
 
+    
+    
     public Dupla(){
         this.setJogadorA(new Jogador("Jogador A", true)); //é Jogador com IA
         this.setJogadorB(new Jogador("Jogador B",true)); //é Jogador com IA
         this.zeraPontos();
     }
+    
+    public void setNome(String n){
+        this.nome=n;
+    }
+    
+    public String getNome(){
+        return this.nome;
+    }
+    
     
     private void zeraPontos(){
         this.pontos=0;
@@ -56,5 +68,12 @@ public final class Dupla {
 
     public Jogador getJogadorB() {
         return  this.jogadorB;
+    }
+    
+    public Jogador getMeuParceiro(Jogador j){
+        if(j==this.getJogadorA())
+            return this.getJogadorB();
+        else
+            return this.getJogadorA();
     }
 }

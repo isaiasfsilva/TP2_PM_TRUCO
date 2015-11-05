@@ -13,33 +13,38 @@ import java.util.Scanner;
  */
 public final class Game {
     private Dupla dupla1, dupla2; 
-    private Baralho baralho;
-    public Game(){
-         this.carregaGame();
-         this.criaBaralho();
-     }
+    private static Game game;
+    private SuperRodada srAtual;
+    private Game(){
+         carregaGame();
+        
+    }
     
+    public static Game getGame(){
+    if(game==null)
+        game=new Game();
+    return game;
+    }
+    
+    public Dupla getDupla(int i){
+        return ((i==1)?this.dupla1:this.dupla2);
+    }
     
     public void playNow(){
         System.out.println("Vamos começar!");
-        this.mostraPlacar();
+        mostraPlacar();
         //Laço do jogo
-        while(this.dupla1.getPontos()<=10 && this.dupla2.getPontos()<=10){
-            //Rodada1
-            Rodada rodada = new Rodada();
-            this.embaralha();
-            this.distribuiCartas();
-            this.listaTodasAsCartasParaJogar();  
+       
+        while(this.getDupla(1).getPontos()<=10 && this.getDupla(2).getPontos()<=10){
             
+            SuperRodada sr = new SuperRodada();
+            this.setSuperRodada(sr);
+           
             
-            
-            
-            this.dupla1.addPontos(30);
-            
-            //Rodada2
-            
-            //Rodada3
-            
+            Dupla venc = sr.Play();
+            venc.addPontos(sr.getPontosEmDisputa());
+            System.out.println("Wow!, "+sr.getPontosEmDisputa()+" pontos para a dupla "+venc.getNome());
+             //Próximo dono do baralho
         }
         if(this.dupla1.getPontos()>10){
             System.out.println("TAM TAM TAM TAM!!!! \n\tA dupla 1 venceu!\n\t"+this.dupla1.getJogadorA().getNome()+" & "+this.dupla1.getJogadorB().getNome()+" jogam muito!\n\n");
@@ -53,12 +58,14 @@ public final class Game {
         
         System.out.println("Insira informações da dupla 1:");
         System.out.println("\tInsira '1' para duas pessoas\n\tInsira '2' para fazer dupla com uma IA\n\tInsira '3' para ser uma dupla de IA's");
-        this.dupla1=this.criaDupla();      
+        this.dupla1=this.criaDupla();   
+        this.dupla1.setNome("Dupla 1");
         System.out.println("Dupla 1 criada com sucesso...");
         
         System.out.println("Insira informações da dupla 2:");
         System.out.println("\tInsira '1' para duas pessoas\n\tInsira '2' para fazer dupla com uma IA\n\tInsira '3' para ser uma dupla de IA's");
-         this.dupla2=this.criaDupla();            
+         this.dupla2=this.criaDupla();
+         this.dupla2.setNome("Dupla 2");
         System.out.println("Dupla 2 criada com sucesso...");
     }
     
@@ -91,43 +98,33 @@ public final class Game {
        return d;
     }
     
-    private void embaralha(){
-        this.baralho.embaralha();
-    }
-    private void criaBaralho() {
-        this.baralho=new Baralho();
-    }
+
     
     private void mostraPlacar(){
         
-        System.out.println("O placar atual é:\n\t Dupla 1: "+this.dupla1.getPontos()+"\n\t Dupla 2: "+this.dupla2.getPontos()+"\n");
+        System.out.println("O placar atual é:\n\t Dupla 1: "+this.getDupla(1).getPontos()+"\n\t Dupla 2: "+this.getDupla(2).getPontos()+"\n");
     }
 
-    private void distribuiCartas() {
-        this.dupla1.getJogadorA().addCarta(this.baralho.getCarta(1));        
-        this.dupla1.getJogadorA().addCarta(this.baralho.getCarta(2));
-        this.dupla1.getJogadorA().addCarta(this.baralho.getCarta(3));
-        this.dupla1.getJogadorB().addCarta(this.baralho.getCarta(4));
-        this.dupla1.getJogadorB().addCarta(this.baralho.getCarta(5));
-        this.dupla1.getJogadorB().addCarta(this.baralho.getCarta(6));
-        
-        this.dupla2.getJogadorA().addCarta(this.baralho.getCarta(7));        
-        this.dupla2.getJogadorA().addCarta(this.baralho.getCarta(8));
-        this.dupla2.getJogadorA().addCarta(this.baralho.getCarta(9));
-        this.dupla2.getJogadorB().addCarta(this.baralho.getCarta(10));
-        this.dupla2.getJogadorB().addCarta(this.baralho.getCarta(11));
-        this.dupla2.getJogadorB().addCarta(this.baralho.getCarta(12));
+
+
+
+    public Dupla getDuplaFromJogador(Jogador j){
+        if(j==null) 
+            return null;
+        if(this.getDupla(1).getJogadorA()==j || this.getDupla(1).getJogadorB()==j)
+            return this.getDupla(1);
+        else
+            return this.getDupla(2);
     }
-
-    private void listaTodasAsCartasParaJogar() {
-        System.out.println("Cartas da dupla 1:\n\t"+this.dupla1.getJogadorA().getNome());
-        this.dupla1.getJogadorA().listaCartasDisponiveis();
-        System.out.println("\n\t"+this.dupla1.getJogadorB().getNome());
-        this.dupla1.getJogadorB().listaCartasDisponiveis();
-
-        System.out.println("Cartas da dupla 2:\n\t"+this.dupla2.getJogadorA().getNome());
-        this.dupla2.getJogadorA().listaCartasDisponiveis();
-        System.out.println("\n\t"+this.dupla2.getJogadorB().getNome());
-        this.dupla2.getJogadorB().listaCartasDisponiveis();
+    public SuperRodada getSuperRodada(){
+        return this.srAtual;
+    }
+    
+    private void setSuperRodada(SuperRodada sr) {
+        this.srAtual=sr;
+    }
+    
+    public Dupla getDuplaAdversaria(Dupla d){
+        return (d==this.dupla2)?this.dupla1:this.dupla2;
     }
 }
